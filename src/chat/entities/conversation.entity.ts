@@ -6,8 +6,11 @@ export class Conversation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  title: string;
+  @Column({ type: 'varchar', nullable: true })
+  title: string | null;
+
+  @Column({ name: 'system_prompt', type: 'text', nullable: true })
+  systemPrompt: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

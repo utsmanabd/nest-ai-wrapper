@@ -239,10 +239,10 @@ Fase **opsional pendukung** (boleh disisipkan kapan saja setelah A):
 
 ### Acceptance criteria
 
-- [ ] Dua conversation bisa punya system prompt berbeda dan behavior-nya beda
-- [ ] Title terisi otomatis (tidak selalu `null`)
-- [ ] Default prompt tetap jalan kalau user tidak set custom
-- [ ] Prompt logic ada di `prompt/`, Chat hanya consume hasilnya
+- [x] Dua conversation bisa punya system prompt berbeda dan behavior-nya beda
+- [x] Title terisi otomatis (tidak selalu `null`)
+- [x] Default prompt tetap jalan kalau user tidak set custom
+- [x] Prompt logic ada di `prompt/`, Chat hanya consume hasilnya
 
 
 
@@ -525,7 +525,7 @@ Fase **opsional pendukung** (boleh disisipkan kapan saja setelah A):
 | ----------------------------- | ------ | ------- |
 | Baseline (chat + stream + DB) | ✅ Done |         |
 | A — Context + token tracking  | ✅ Done | Sliding window + LlmService + usage columns |
-| B — Prompt + auto-title       | ⬜ Todo |         |
+| B — Prompt + auto-title       | ✅ Done | Personas + PATCH prompt + auto-title async |
 | C — Summarization             | ⬜ Todo |         |
 | D — Structured output         | ⬜ Todo |         |
 | E — Tool calling              | ⬜ Todo |         |
