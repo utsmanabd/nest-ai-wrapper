@@ -9,7 +9,7 @@ export const MAX_CONTEXT_TOKENS = Number(
 );
 
 export const DEFAULT_SYSTEM_PROMPT =
-  'Selalu jawab dalam Bahasa Indonesia kecuali user meminta bahasa lain.';
+  '';
 
 /** Rough chars-per-token estimate when Ollama does not return counts. */
 export const CHARS_PER_TOKEN_ESTIMATE = 4;

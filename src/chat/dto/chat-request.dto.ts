@@ -1,10 +1,7 @@
 import { IsString, IsOptional, IsUUID, IsIn } from 'class-validator';
+import { listPersonas } from 'src/prompt/personas';
 
-const PERSONA_IDS = [
-  'technical-assistant',
-  'code-tutor',
-  'concise-editor',
-] as const;
+const PERSONA_IDS = listPersonas().map((persona) => persona.id);
 
 export class ChatRequestDto {
   @IsUUID()

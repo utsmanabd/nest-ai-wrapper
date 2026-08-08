@@ -101,7 +101,7 @@ export class PromptService {
       {
         role: 'system',
         content:
-          'Buat judul singkat maksimal 6 kata untuk percakapan berdasarkan pesan user. Jawab HANYA dengan judulnya, tanpa tanda kutip, tanpa penjelasan.',
+          "Create a short title of no more than 6 words for the conversation based on the user's message. The title's language should match the language the user entered. Respond ONLY with the title, without quotation marks or any explanation.",
       },
       {
         role: 'user',
