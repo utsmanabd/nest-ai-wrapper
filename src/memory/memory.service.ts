@@ -41,31 +41,17 @@ export class MemoryService {
 
   /**
    * Check if a conversation should be summarized.
-   * Trigger when:
-   * - First summary: message count exceeds threshold
-   * - Progressive summary: estimated tokens > 80% of context window budget
+   * Trigger based on token budget only (80% of context window).
    */
   async shouldSummarize(conversation: Conversation): Promise<boolean> {
     const msgCount = conversation.messageCount || 0;
-
-    // First summary: trigger on message count
-    if (!conversation.summary || !conversation.summarizedUntil) {
-      if (msgCount >= SUMMARY_MESSAGE_THRESHOLD) {
-        return true;
-      }
+    if (msgCount === 0) {
       return false;
     }
 
-    // Progressive summary: trigger on token budget
-    if (msgCount > 0) {
-      const estimatedTokens = await this.estimateTokensFromConversation(conversation);
-      const tokenThreshold = MAX_CONTEXT_TOKENS * 0.8; // 80% of budget
-      if (estimatedTokens >= tokenThreshold) {
-        return true;
-      }
-    }
-
-    return false;
+    const estimatedTokens = await this.estimateTokensFromConversation(conversation);
+    const tokenThreshold = MAX_CONTEXT_TOKENS * 0.8; // 80% of budget
+    return estimatedTokens >= tokenThreshold;
   }
 
   /**
