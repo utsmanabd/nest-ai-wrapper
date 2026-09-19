@@ -10,6 +10,7 @@ import {
 import { ContextService } from '../context/context.service';
 import { LlmService } from '../llm/llm.service';
 import { PromptService } from '../prompt/prompt.service';
+import { MemoryService } from '../memory/memory.service';
 import { Conversation } from './entities/conversation.entity';
 import { Message } from './entities/message.entity';
 
@@ -38,6 +39,7 @@ export class ChatService {
     private readonly llmService: LlmService,
     private readonly contextService: ContextService,
     private readonly promptService: PromptService,
+    private readonly memoryService: MemoryService,
   ) {}
 
   async getOrCreateConversation(
@@ -116,6 +118,15 @@ export class ChatService {
     if (isFirstUserMessage) {
       void this.promptService.maybeSetTitle(conversationId, userMessage);
     }
+
+    // Update message count and check for auto-summarization
+    conversation.messageCount = await this.messageRepo.count({
+      where: { conversationId },
+    });
+    await this.conversationRepo.save(conversation);
+
+    // Fire-and-forget auto-summarize
+    void this.memoryService.maybeSummarize(conversationId);
 
     return {
       reply: content,
@@ -233,20 +244,34 @@ export class ChatService {
     llmMessages: LlmMessage[];
     context: ContextBuildResult;
   }> {
-    const historyRows = await this.getHistory(conversation.id);
-    const messages: LlmMessage[] = historyRows
+    const systemPrompt = this.promptService.getConversationPrompt(conversation);
+
+    // Get recent messages (handles summary logic internally)
+    const recentMessages = await this.memoryService.getRecentMessages(
+      conversation.id,
+    );
+
+    const messages: LlmMessage[] = recentMessages
       .filter((m) => m.role !== 'system')
       .map((m) => ({
         role: m.role,
         content: m.content,
       }));
 
-    messages.unshift({
-      role: 'system',
-      content: this.promptService.getConversationPrompt(conversation),
-    });
+    // Build context with summary as system note if available
+    const contextMessages: LlmMessage[] = [];
 
-    const context = this.contextService.build(messages);
+    if (conversation.summary) {
+      contextMessages.push({
+        role: 'system',
+        content: `[PREVIOUS CONVERSATION SUMMARY]\n${conversation.summary}\n\n[End of summary. Continue the current conversation.]`,
+      });
+    }
+
+    contextMessages.push({ role: 'system', content: systemPrompt });
+    contextMessages.push(...messages);
+
+    const context = this.contextService.build(contextMessages);
     return { llmMessages: context.messages, context };
   }
 }

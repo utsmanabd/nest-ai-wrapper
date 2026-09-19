@@ -25,6 +25,7 @@ export class LlmService {
 
   async chat(messages: LlmMessage[]): Promise<LlmChatResult> {
     const startedAt = Date.now();
+    console.log('Messages sent to LLM:', messages.map((m) => m.content).join('\n'));
     const response = await axios.post<OllamaChatResponse>(this.url, {
       model: this.model,
       messages,

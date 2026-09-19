@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContextModule } from '../context/context.module';
 import { LlmModule } from '../llm/llm.module';
 import { PromptModule } from '../prompt/prompt.module';
+import { MemoryModule } from '../memory/memory.module';
 import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
 import { ConversationService } from './conversation.service';
@@ -16,6 +17,7 @@ import { Message } from './entities/message.entity';
     LlmModule,
     ContextModule,
     PromptModule,
+    MemoryModule,
   ],
   providers: [ChatService, ConversationService],
   controllers: [ChatController, ConversationsController],

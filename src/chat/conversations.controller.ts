@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { PromptService } from '../prompt/prompt.service';
+import { MemoryService } from '../memory/memory.service';
 import { ConversationService } from './conversation.service';
 import { CreateConversationDto } from './dto/create-conversation.dto';
 import { UpdatePromptDto } from './dto/update-prompt.dto';
@@ -17,6 +18,7 @@ export class ConversationsController {
   constructor(
     private readonly conversationService: ConversationService,
     private readonly promptService: PromptService,
+    private readonly memoryService: MemoryService,
   ) {}
 
   @Get('personas')
@@ -78,6 +80,19 @@ export class ConversationsController {
       id: conversation.id,
       systemPrompt: this.promptService.getConversationPrompt(conversation),
       updatedAt: conversation.updatedAt,
+    };
+  }
+
+  @Post(':id/summarize')
+  async summarize(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    const result = await this.memoryService.summarize(id);
+    return {
+      conversationId: id,
+      summary: result.summary,
+      summarizedUntil: result.summarizedUntil,
+      messageCount: result.messageCount,
     };
   }
 }

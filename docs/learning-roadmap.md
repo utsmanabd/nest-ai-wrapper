@@ -526,7 +526,7 @@ Fase **opsional pendukung** (boleh disisipkan kapan saja setelah A):
 | Baseline (chat + stream + DB) | ✅ Done |         |
 | A — Context + token tracking  | ✅ Done | Sliding window + LlmService + usage columns |
 | B — Prompt + auto-title       | ✅ Done | Personas + PATCH prompt + auto-title async |
-| C — Summarization             | ⬜ Todo |         |
+| C — Summarization             | ✅ Done | MemoryModule + auto-summarize + progressive summary + manual endpoint |
 | D — Structured output         | ⬜ Todo |         |
 | E — Tool calling              | ⬜ Todo |         |
 | F — RAG                       | ⬜ Todo |         |

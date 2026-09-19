@@ -12,6 +12,15 @@ export class Conversation {
   @Column({ name: 'system_prompt', type: 'text', nullable: true })
   systemPrompt: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  summary: string | null;
+
+  @Column({ name: 'summarized_until', type: 'uuid', nullable: true })
+  summarizedUntil: string | null;
+
+  @Column({ name: 'message_count', type: 'int', default: 0 })
+  messageCount: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
